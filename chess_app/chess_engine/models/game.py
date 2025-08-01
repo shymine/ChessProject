@@ -3,8 +3,8 @@ import chess
 import chess.svg
 
 from chess import Move
-from chess_app.chess_engine.models.concretePlayer import ConcretePlayer
-from chess_app.chess_engine.models.playerBase import InitPlayer, Player
+from chess_engine.models.concretePlayer import ConcretePlayer
+from chess_engine.models.playerBase import InitPlayer, Player
 # from chess_app.chess_engine.models.randomAI import RandomAI
 
 AI: dict[str, Player] = {

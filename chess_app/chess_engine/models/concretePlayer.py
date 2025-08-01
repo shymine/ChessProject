@@ -1,5 +1,5 @@
 from chess import Move
-from chess_app.chess_engine.models.playerBase import InitPlayer, Player
+from chess_engine.models.playerBase import InitPlayer, Player
 
 class ConcretePlayer(Player):
     def __init__(self, player: InitPlayer) -> None:
