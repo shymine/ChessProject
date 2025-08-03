@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+</head>
+
+<body>
+    <div class="container">
+        <div class="navbar navbar-expand-lg bg-body-secondary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Introduction à l'IA via les échecs</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8"> <!--the chess board-->
+                {% autoescape off %}{{ image }}{% endautoescape %}
+            </div>
+            <div class="col-md-4"> <!--the history, players and the play buttons-->
+                <div class="row"> <!--history-->
+                    <ul>
+                        {% for move in history %}
+                        <li>
+                            {{ move }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="row"> <!-- players -->
+                    <div class="col-md-10">
+                        <div class="row">
+                            <a class="col-md-6">BLANC: </a><a class="col-md-6">{{white}}</a>
+                        </div>
+                        <div class="row">
+                            <a class="col-md-6">NOIR: </a><a class="col-md-6">{{black}}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row"> <!-- play buttons -->
+                    {% if current.is_ai %}
+                        <div class="col-md-6">
+                            <button class="btn btn-secondary w-100" onclick="location.href='{% url 'play' %}'">Faire jouer </button>
+                        </div>
+                    {% endif %}
+                    {% if not current.is_ai %}
+                        <div class="col-md-6">
+                            <button class="btn btn-secondary w-100" onclick="location.href='{% url 'play' %}'">Jouer </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+</body>
