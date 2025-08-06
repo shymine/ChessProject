@@ -9,3 +9,6 @@ class ConcretePlayer(Player):
         if len(moves) != 1:
             raise Exception("move is not unique but it is a concrete player")
         return moves[0]
+    
+    def __str__(self) -> str:
+        return "[name: {}, class: ConcretePlayer]".format(self.name)

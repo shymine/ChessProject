@@ -5,19 +5,20 @@ import chess.svg
 from chess import Move
 from chess_engine.models.concretePlayer import ConcretePlayer
 from chess_engine.models.playerBase import InitPlayer, Player
-# from chess_app.chess_engine.models.randomAI import RandomAI
+from chess_engine.models.randomAI import RandomAI
 
 AI: dict[str, Player] = {
-    # "random": RandomAI(InitPlayer("random", True))
+    "random": RandomAI(InitPlayer("random", True))
 }
 
 class Game:
     def __init__(self, black: InitPlayer, white: InitPlayer) -> None:
-        create = lambda p : self._createPlayer(p) if not black.is_ai else self._createAI(p)
+        create = lambda p : self._createPlayer(p) if not p.is_ai else self._createAI(p)
         self.players = {
             chess.BLACK: create(black),
             chess.WHITE: create(white)
         }
+        print("Black: ", self.players[False], "\nWhite: ", self.players[True])
         
         self.board = chess.Board()
 
@@ -58,8 +59,12 @@ class Game:
             lastmove= self.board.peek() if len(self.board.move_stack) > 0 else None
         )
     
-    def play(self, move: Optional[Move]):
+    def play(self, move: Optional[Move] = None):
+        print("move: ", move)
         if move is not None:
             self.board.push(move)
         else:
-            self.players[self.currentColor()].play(self.legalMoves())
+            print("color: ", self.currentColor(), "current player is ai: ", self.players[self.currentColor()].is_ai)
+            ai_move = self.players[self.currentColor()].play(self.legalMoves())
+            self.board.push(ai_move)
+            

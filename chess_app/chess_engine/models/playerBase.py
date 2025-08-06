@@ -15,3 +15,5 @@ class Player(abc.ABC):
     @abc.abstractmethod
     def play(self, moves: list[chess.Move]) -> chess.Move :
         pass
+
+    

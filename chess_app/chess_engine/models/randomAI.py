@@ -1,12 +1,13 @@
 import random
 from chess import Move
-from chess_app.chess_engine.models.playerBase import InitPlayer, Player
+from chess_engine.models.playerBase import InitPlayer, Player
 
 class RandomAI(Player): 
     def __init__(self, player: InitPlayer) -> None:
         super().__init__(player)
     
     def play(self, moves: list[Move]) -> Move:
+        print("Random AI play: ", moves)
         if len(moves) == 0:
             raise Exception("there are no moves")
         if len(moves) == 1:
@@ -14,3 +15,6 @@ class RandomAI(Player):
         
         move = random.randint(0, len(moves)-1)
         return moves[move]
+    
+    def __str__(self) -> str:
+        return "[name: {}, class: RandomAI]".format(self.name)
