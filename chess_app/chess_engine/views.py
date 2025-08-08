@@ -1,20 +1,27 @@
 import chess 
 import traceback
 
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpRequest
 from django.shortcuts import render
-from django.template import loader
 
 from chess_engine.models.game import Game, AI
 from chess_engine.models.playerBase import InitPlayer
 from chess_engine.models.game_repository import GameRepository
 
 GAME_REPO: GameRepository = GameRepository()
-# Create your views here.
+
+def game_history():
+    res = []
+    for game in GAME_REPO.game_history:
+        res.append((game.players[True].name, game.players[False].name, game.gameResultString()))
+    return res
+        
 def index(request):
+    print("game history ", game_history())
     return render(request, "chess_engine/index.html", {
         "ais": AI.keys(),
-        "error_message": ""
+        "error_message": "",
+        "games": game_history()
     })
 
 def createGame(request: HttpRequest):
@@ -68,15 +75,16 @@ def play(request: HttpRequest):
         "win": game.isCheckmate(),
         "error_message": "",
         }
-        GAME_REPO.pushHistory()
     else:
         if game.players[game.currentColor()].is_ai:
             results = _ais(game)
         else:
             results = _player(move, game)
-
-    if results["win"]:
-        results["current"] = game.players[not game.board.turn]
+        
+        if results["win"] or results["draw"]: # game ended
+            results["current"] = game.players[not game.board.turn]
+            GAME_REPO.pushHistory()
+    
     return render(request, "chess_engine/game.html", results)
 
 def _player(move: str | None, game: Game):  

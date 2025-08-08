@@ -18,7 +18,6 @@ class Game:
             chess.BLACK: create(black),
             chess.WHITE: create(white)
         }
-        print("Black: ", self.players[False], "\nWhite: ", self.players[True])
         
         self.board = chess.Board()
 
@@ -60,11 +59,16 @@ class Game:
         )
     
     def play(self, move: Optional[Move] = None):
-        print("move: ", move)
         if move is not None:
             self.board.push(move)
         else:
             print("color: ", self.currentColor(), "current player is ai: ", self.players[self.currentColor()].is_ai)
             ai_move = self.players[self.currentColor()].play(self.legalMoves())
             self.board.push(ai_move)
+    
+    def gameResultString(self):
+        if self.board.is_game_over():
+            return "1/2-1/2" if self.isDraw()[0] else ("1-0" if self.currentColor else "0-1")
+        else:
+            raise Exception("game not finished, impossible to generate result string")
             
