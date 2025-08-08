@@ -57,3 +57,7 @@ It relies on [django]{https://www.djangoproject.com/} for the interface part so 
 ## The interface
 
 The interface first asks yo to create a game and to chose the opponents
+
+## Composing your own AI
+
+Your ai must implement the AI abstract class and you must update the AI_LIST constant in the `chess_engine/models/ai_list.py` file.

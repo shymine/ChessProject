@@ -20,4 +20,4 @@ class AI(Player, abc.ABC):
     @abc.abstractmethod
     def makeMove(self, board: chess.Board) -> chess.Move:
         pass
-    
+

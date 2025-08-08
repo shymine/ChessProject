@@ -5,9 +5,10 @@ import traceback
 from django.http import HttpRequest
 from django.shortcuts import render
 
-from chess_engine.models.game import Game, AI_LIST
-from chess_engine.models.playerBase import InitPlayer, AI
-from chess_engine.models.game_repository import GameRepository
+from chess_engine.models import Game, InitPlayer, AI_LIST, GameRepository
+
+# TODO: view for vizualize games that already happened
+# TODO: when two AI are selected, press a button for fast forward that plays a move every 0.5s
 
 GAME_REPO: GameRepository = GameRepository()
 
@@ -43,7 +44,6 @@ def base_game_res(game):
 ################### views ###################
 
 def index(request):
-    print("game history ", game_history())
     return render(request, "chess_engine/index.html", {
         "ais": AI_LIST.keys(),
         "error_message": "",

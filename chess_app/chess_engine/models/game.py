@@ -1,14 +1,9 @@
-from typing import Optional
 import chess
 import chess.svg
 
 from chess import Move
 from chess_engine.models.playerBase import InitPlayer, Player
-from chess_engine.models.randomAI import RandomAI
-
-AI_LIST: dict[str, Player] = {
-    "random": RandomAI(InitPlayer("random", True))
-}
+from chess_engine.models.ai_list import AI_LIST
 
 class Game:
     def __init__(self, black: InitPlayer, white: InitPlayer) -> None:
