@@ -53,7 +53,7 @@ It relies on [django]{https://www.djangoproject.com/} for the interface part so 
 
 - run the server
   `python manage.py runserver`
-- make migrations
-  `python manage.py migrate`
-- create a new app
-  `python manage.py startapp appname`
+
+## The interface
+
+The interface first asks yo to create a game and to chose the opponents

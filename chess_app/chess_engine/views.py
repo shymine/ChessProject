@@ -5,19 +5,38 @@ from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render
 from django.template import loader
 
-from chess_engine.models.game import Game
+from chess_engine.models.game import Game, AI
 from chess_engine.models.playerBase import InitPlayer
 from chess_engine.models.game_repository import GameRepository
 
 GAME_REPO: GameRepository = GameRepository()
 # Create your views here.
 def index(request):
-    return render(request, "chess_engine/index.html")
+    return render(request, "chess_engine/index.html", {
+        "ais": AI.keys(),
+        "error_message": ""
+    })
 
 def createGame(request: HttpRequest):
-    black = InitPlayer("manu", False)
-    white = InitPlayer("random", True)
-    game = Game(black, white)
+    print(request.POST)
+    wname = request.POST.get("wname")
+    bname = request.POST.get("bname")
+    wis_ai = request.POST.get("wis_ai")
+    bis_ai = request.POST.get("bis_ai")
+    ai = lambda x : x == 'AI' 
+    print(wis_ai, " wis_ai ", ai(wis_ai), " / ", bis_ai, " bis_ai ", ai(bis_ai))
+    black = InitPlayer(bname, ai(bis_ai))
+    white = InitPlayer(wname, ai(wis_ai))
+    try:
+        game = Game(black, white)
+    except Exception as err:
+        print("error: ", err)
+        traceback.print_exc()
+        return render(request, "chess_engine/index.html", {
+        "ais": AI.keys(),
+        "error_message": "{} ne correspond a aucune IA".format(err)
+    })
+
     GAME_REPO.setCurrentGame(game)
     return render(request, "chess_engine/game.html", {
         "image": game.getBoardImage(),
