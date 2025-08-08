@@ -1,13 +1,14 @@
 import random
 from chess import Move
-from chess_engine.models.playerBase import InitPlayer, Player
+import chess
+from chess_engine.models.playerBase import InitPlayer, AI
 
-class RandomAI(Player): 
+class RandomAI(AI): 
     def __init__(self, player: InitPlayer) -> None:
         super().__init__(player)
     
-    def play(self, moves: list[Move]) -> Move:
-        print("Random AI play: ", moves)
+    def makeMove(self, board: chess.Board) -> Move:
+        moves = list(board.legal_moves)
         if len(moves) == 0:
             raise Exception("there are no moves")
         if len(moves) == 1:

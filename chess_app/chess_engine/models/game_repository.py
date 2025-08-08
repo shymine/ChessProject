@@ -1,5 +1,5 @@
 from typing import List
-from chess_engine.models.game import Game, AI
+from chess_engine.models.game import Game, AI_LIST
 from chess_engine.models.playerBase import InitPlayer
 from os import listdir
 from os.path import isfile, join
@@ -57,9 +57,9 @@ class GameRepository:
             pgn_game: pgn.Game = pgn.read_game(file)
         print(filename)
         wname = pgn_game.headers["White"]
-        wis_ai = wname in AI
+        wis_ai = wname in AI_LIST
         bname = pgn_game.headers["Black"]
-        bis_ai = bname in AI
+        bis_ai = bname in AI_LIST
         white = InitPlayer(wname, wis_ai)
         black = InitPlayer(bname, bis_ai)
         game = Game(white, black)

@@ -3,11 +3,10 @@ import chess
 import chess.svg
 
 from chess import Move
-from chess_engine.models.concretePlayer import ConcretePlayer
 from chess_engine.models.playerBase import InitPlayer, Player
 from chess_engine.models.randomAI import RandomAI
 
-AI: dict[str, Player] = {
+AI_LIST: dict[str, Player] = {
     "random": RandomAI(InitPlayer("random", True))
 }
 
@@ -22,10 +21,10 @@ class Game:
         self.board = chess.Board()
 
     def _createPlayer(self, player: InitPlayer) -> Player :
-        return ConcretePlayer(player)
+        return Player(player)
     
     def _createAI(self, player: InitPlayer) -> Player:
-        ai = AI[player.name]
+        ai = AI_LIST[player.name]
         return ai
 
     def legalMoves(self) -> list[Move]:
@@ -58,17 +57,18 @@ class Game:
             lastmove= self.board.peek() if len(self.board.move_stack) > 0 else None
         )
     
-    def play(self, move: Optional[Move] = None):
-        if move is not None:
-            self.board.push(move)
-        else:
-            print("color: ", self.currentColor(), "current player is ai: ", self.players[self.currentColor()].is_ai)
-            ai_move = self.players[self.currentColor()].play(self.legalMoves())
-            self.board.push(ai_move)
+    def play(self, move: Move):
+        self.board.push(move)
     
     def gameResultString(self):
         if self.board.is_game_over(claim_draw=True):
-            return "1/2-1/2" if self.isDraw()[0] else ("1-0" if self.currentColor else "0-1")
+            res = ""
+            if self.isDraw()[0]:
+                return "1/2-1/2"
+            if self.board.turn:
+                return "0-1"
+            else:
+                return "1-0"
         else:
             raise Exception("game not finished, impossible to generate result string")
             
