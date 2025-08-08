@@ -67,7 +67,7 @@ class Game:
             self.board.push(ai_move)
     
     def gameResultString(self):
-        if self.board.is_game_over():
+        if self.board.is_game_over(claim_draw=True):
             return "1/2-1/2" if self.isDraw()[0] else ("1-0" if self.currentColor else "0-1")
         else:
             raise Exception("game not finished, impossible to generate result string")

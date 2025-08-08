@@ -63,11 +63,11 @@
         </div>
 
         <div class="row"> <!-- history of games -->
-            <h2>Historique de partie:</h2>
+            <h2 class="mb-3">Historique de partie:</h2>
             <div class="col-md-8">
                 <ul>
                     {% for game in games %}
-                    <li class="row bg-light border rounded">
+                    <li class="row bg-light border rounded mb-2">
                         <div class="col-md-3"><a>{{ game.0 }}</a></div>
                         <div class="col-md-3"><a>VS.</a></div>
                         <div class="col-md-3"><a>{{ game.1 }}</a></div>
