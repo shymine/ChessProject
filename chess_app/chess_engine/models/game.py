@@ -66,4 +66,3 @@ class Game:
                 return "1-0"
         else:
             raise Exception("game not finished, impossible to generate result string")
-            

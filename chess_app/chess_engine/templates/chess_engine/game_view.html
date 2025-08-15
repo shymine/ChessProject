@@ -8,7 +8,6 @@
 
 <body>
     <div class="container">
-
         <nav class="navbar navbar navbar-expand-lg navbar-dark bg-dark mb-5">
             <div class="container-fluid">
                 <a class="navbar-brand" onclick="location.href='{% url 'index' %}'">Introduction à l'IA via les
@@ -19,7 +18,7 @@
             <div class="col-md-8"> <!--the chess board-->
                 {% autoescape off %}{{ image }}{% endautoescape %}
             </div>
-            <div class="col-md-4"> <!--the history, players and the play buttons-->
+            <div class="col-md-4"> <!--the history, players and the previous/next button-->
                 <div class="row overflow-auto" style="height: 856px;"> <!--history-->
                     <ul>
                         {% for move in history %}
@@ -43,44 +42,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="row"> <!-- play buttons -->
-                    <form action="{% url 'play' %}" method="post">
-                        {% csrf_token %}
-                        {% if not win and not draw %}
-
-                        <fieldset>
-                            {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-                            {% if current.is_ai %}
-                            <div class="col-md-6">
-                                <a>Au tour d'une IA</a>
-                            </div>
-                            {% endif %}
-                            {% if not current.is_ai %}
-                            <div class="col-mb-6">
-                                <label for="move">Coups d'échec: </label>
-                                <input type="text" name="move" id="move" value="">
-                            </div>
-                            {% endif %}
-                        </fieldset>
-                        <input class="btn btn-secondary w-100" type="submit" value="play">
-
-                        {% elif win %}
-
-                        <div class="btn btn-success w-100">
-                            <a>{{ current.name }} gagne la partie!</a>
-                        </div>
-
-                        {% else %}
-
-                        <div class="btn btn-secondary w-100">
-                            <a>La partie est égalité par {{ draw_reason }}</a>
-                        </div>
-
-                        {% endif %}
-
-                    </form>
-
+                <div class="row">
+                    <div class="col-md-4">
+                        <button class="btn btn-secondary w-100"
+                            onclick="location.href='{% url 'review' id=game_id move=prev %}'">Précédent</button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-tertiary w-100"
+                            onclick="location.href='{% url 'review' id=game_id move=0 %}'">Reset</button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-secondary w-100"
+                            onclick="location.href='{% url 'review' id=game_id move=next %}'">Suivant</button>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 </body>

@@ -14,7 +14,7 @@ class GameRepository:
     def __init__(self) -> None:
         self.default = Game(InitPlayer("", False), InitPlayer("", False))
         self.current_game = self.default
-        self.game_history: List[Game] = []
+        self.game_history: List[pgn.Game] = []
 
         print("loading history:")
         filenames = [join(self.ROOT, f) for f in listdir(self.ROOT) if isfile(join(self.ROOT, f))]
@@ -28,7 +28,7 @@ class GameRepository:
     
     def pushHistory(self): # must be called only if game is finished
         if self.current_game.players[True].name != "":
-            self.game_history.append(self.current_game)
+            
             self._toPGN()
             print("game pushed to history")
             self.current_game = self.default
@@ -44,27 +44,16 @@ class GameRepository:
         result = self.current_game.gameResultString()
         game.headers["Result"] = result
 
-        node = game
-        for move in self.current_game.getHistory():
-            node = node.add_main_variation(move)
+        game.from_board(self.current_game.board)
         
         filename = "./games/{}_{}.pgn".format(white, black)
         with open(filename, "w") as file:
             file.write(str(game))
+        self.game_history.append(game)
     
-    def _fromPGN(self, filename: str) -> Game:
+    def _fromPGN(self, filename: str) -> pgn.Game:
         with open(filename, "r") as file:
             pgn_game: pgn.Game = pgn.read_game(file)
         print(filename)
-        wname = pgn_game.headers["White"]
-        wis_ai = wname in AI_LIST
-        bname = pgn_game.headers["Black"]
-        bis_ai = bname in AI_LIST
-        white = InitPlayer(wname, wis_ai)
-        black = InitPlayer(bname, bis_ai)
-        game = Game(white, black)
-
-        for move in pgn_game.mainline_moves():
-            game.play(move)
         
-        return game
+        return pgn_game

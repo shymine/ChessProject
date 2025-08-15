@@ -1,5 +1,6 @@
 from typing import List
-import chess 
+import chess
+import chess.svg as svg
 import traceback
 
 from django.http import HttpRequest
@@ -7,7 +8,6 @@ from django.shortcuts import render
 
 from chess_engine.models import Game, InitPlayer, AI_LIST, GameRepository
 
-# TODO: view for vizualize games that already happened
 # TODO: when two AI are selected, press a button for fast forward that plays a move every 0.5s
 
 GAME_REPO: GameRepository = GameRepository()
@@ -15,7 +15,7 @@ GAME_REPO: GameRepository = GameRepository()
 def game_history():
     res = []
     for game in GAME_REPO.game_history:
-        res.append((game.players[True].name, game.players[False].name, game.gameResultString()))
+        res.append((game.headers["White"], game.headers["Black"], game.headers["Result"]))
     return res
 
 def move_stack(moves: List[chess.Move]): # change from list of move to list of (turn number, white move, black move)
@@ -116,9 +116,33 @@ def _player(move: str | None, game: Game):
         }
 
 def _ais(game: Game):
+    # player is an AI
     move = game.players[game.currentColor()].makeMove(game.board)
     game.play(move)
     return {
         **base_game_res(game),
         "error_message": "",
         }
+
+def review(request: HttpRequest, id: int, move: int):
+    print("review: id ", id, " move ", move)
+    game = GAME_REPO.game_history[id]
+    board = game.board()
+    mainline = list(game.mainline_moves())
+    for i in range(move+1):
+        print(board.san(mainline[i]))
+        board.push(mainline[i])
+
+    return render(request, "chess_engine/game_view.html", {
+        "image": svg.board(
+            board,
+            lastmove=board.peek() if len(board.move_stack) > 0 else None
+        ),
+        "history": move_stack(list(game.mainline_moves())),
+        "white": game.headers["White"],
+        "black": game.headers["Black"],
+        "game_id": id,
+        "prev": max(0, move-1),
+        "next": min(len(list(game.mainline_moves()))-1, move+1),
+        "move": move
+    })
