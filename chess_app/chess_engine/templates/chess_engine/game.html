@@ -50,17 +50,29 @@
 
                         <fieldset>
                             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+                            {% if both_ai %}
+                            <div class="col-md-6">
+                                <input type="checkbox" name="roll" id="roll" value="roll">
+                                <label for="roll">Dérouler la partie</label>
+                            </div>
+                            {% endif %}
+
                             {% if current.is_ai %}
+
                             <div class="col-md-6">
                                 <a>Au tour d'une IA</a>
                             </div>
-                            {% endif %}
-                            {% if not current.is_ai %}
+
+                            {% else %}
+
                             <div class="col-mb-6">
                                 <label for="move">Coups d'échec: </label>
                                 <input type="text" name="move" id="move" value="">
                             </div>
+
                             {% endif %}
+
                         </fieldset>
                         <input class="btn btn-secondary w-100" type="submit" value="play">
 

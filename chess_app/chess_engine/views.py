@@ -5,6 +5,7 @@ import traceback
 
 from django.http import HttpRequest
 from django.shortcuts import render
+from functools import reduce
 
 from chess_engine.models import Game, InitPlayer, AI_LIST, GameRepository
 
@@ -28,7 +29,7 @@ def move_stack(moves: List[chess.Move]): # change from list of move to list of (
         ))
     return move_stack
 
-def base_game_res(game):
+def base_game_res(game: Game):
     draw = game.isDraw()
     return {
         "image": game.getBoardImage(),
@@ -39,7 +40,15 @@ def base_game_res(game):
         "draw": draw[0],
         "draw_reason": draw[1],
         "win": game.isCheckmate(),
+        "both_ai": reduce(lambda x, y: x.is_ai and y.is_ai, game.players.values())
     }
+
+def roll_out():
+    game: Game = GAME_REPO.current_game
+    res = {}
+    while not (game.isCheckmate() or game.isDraw()[0]):
+        res = _ais(game)
+    return res
 
 ################### views ###################
 
@@ -78,8 +87,13 @@ def createGame(request: HttpRequest):
 def play(request: HttpRequest):
     move = request.POST.get("move")
     game = GAME_REPO.current_game
+    roll = request.POST.get("roll")
+
     results = {}
-    if game.isCheckmate() or game.isDraw()[0]:
+    if roll == 'roll':
+        results = roll_out()
+
+    elif game.isCheckmate() or game.isDraw()[0]:
         results = {
         **base_game_res(game),
         "error_message": "",
@@ -90,9 +104,9 @@ def play(request: HttpRequest):
         else:
             results = _player(move, game)
         
-        if results["win"] or results["draw"]: # game ended
-            results["current"] = game.players[not game.board.turn]
-            GAME_REPO.pushHistory()
+    if results["win"] or results["draw"]: # game ended
+        results["current"] = game.players[not game.board.turn]
+        GAME_REPO.pushHistory()
     
     return render(request, "chess_engine/game.html", results)
 
@@ -125,12 +139,13 @@ def _ais(game: Game):
         }
 
 def review(request: HttpRequest, id: int, move: int):
-    print("review: id ", id, " move ", move)
+    print(GAME_REPO.game_history)
+    print("review: id ", id, "/", len(GAME_REPO.game_history), " move ", move)
     game = GAME_REPO.game_history[id]
     board = game.board()
     mainline = list(game.mainline_moves())
+    print("main line", mainline)
     for i in range(move+1):
-        print(board.san(mainline[i]))
         board.push(mainline[i])
 
     return render(request, "chess_engine/game_view.html", {

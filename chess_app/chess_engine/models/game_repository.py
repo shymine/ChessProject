@@ -4,6 +4,8 @@ from chess_engine.models.playerBase import InitPlayer
 from chess_engine.models.ai_list import AI_LIST
 from os import listdir
 from os.path import isfile, join
+import time
+import datetime
 
 import chess.pgn as pgn
 
@@ -27,8 +29,7 @@ class GameRepository:
         self.current_game = game
     
     def pushHistory(self): # must be called only if game is finished
-        if self.current_game.players[True].name != "":
-            
+        if self.current_game.players[True].name != "":  
             self._toPGN()
             print("game pushed to history")
             self.current_game = self.default
@@ -44,9 +45,12 @@ class GameRepository:
         result = self.current_game.gameResultString()
         game.headers["Result"] = result
 
-        game.from_board(self.current_game.board)
+        node = game
+        for move in self.current_game.getHistory():
+            node = node.add_main_variation(move)
         
-        filename = "./games/{}_{}.pgn".format(white, black)
+        t = datetime.datetime.now()
+        filename = "./games/{}_{}_{}.pgn".format(white, black, t.strftime('%m_%d_%Y_%H_%M'))
         with open(filename, "w") as file:
             file.write(str(game))
         self.game_history.append(game)
