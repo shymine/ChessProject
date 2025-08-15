@@ -1,10 +1,8 @@
 from typing import List
 from chess_engine.models.game import Game
 from chess_engine.models.playerBase import InitPlayer
-from chess_engine.models.ai_list import AI_LIST
 from os import listdir
 from os.path import isfile, join
-import time
 import datetime
 
 import chess.pgn as pgn
