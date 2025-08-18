@@ -1,11 +1,11 @@
 import random
 from chess import Move
 import chess
-from chess_engine.models.playerBase import InitPlayer, AI
+from chess_engine.models.base import InitPlayer, AI
 
 class RandomAI(AI): 
     def __init__(self, player: InitPlayer) -> None:
-        super().__init__(player)
+        super().__init__(player, None)
     
     def makeMove(self, board: chess.Board) -> Move:
         moves = list(board.legal_moves)

@@ -1,6 +1,6 @@
 from typing import List
 from chess_engine.models.game import Game
-from chess_engine.models.playerBase import InitPlayer
+from chess_engine.models.base import InitPlayer
 from os import listdir
 from os.path import isfile, join
 import datetime

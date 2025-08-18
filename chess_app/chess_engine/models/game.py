@@ -2,7 +2,7 @@ import chess
 import chess.svg
 
 from chess import Move
-from chess_engine.models.playerBase import InitPlayer, Player
+from chess_engine.models.base import InitPlayer, Player
 from chess_engine.models.ai_list import AI_LIST
 
 class Game:
