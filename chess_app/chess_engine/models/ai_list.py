@@ -1,9 +1,10 @@
-from chess_engine.models.ai_algorythm.randomAI import RandomAI
-from chess_engine.models.ai_algorythm.minmax import MinMax
-from chess_engine.models.playerBase import Player, InitPlayer
+from chess_engine.models.ai_algorithm.randomAI import RandomAI
+from chess_engine.models.ai_algorithm.minmax import MinMax
+from chess_engine.models.base import Player, InitPlayer
+from chess_engine.models.ai_algorithm.pieceCountH import PieceCountH
 
 
 AI_LIST: dict[str, Player] = {
     "random": RandomAI(InitPlayer("random", True)),
-    "minmax": MinMax(InitPlayer("minmax", True))
+    "minmax": MinMax(InitPlayer("minmax", True), PieceCountH())
 }

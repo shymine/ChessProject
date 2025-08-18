@@ -11,13 +11,21 @@ class Player:
         super().__init__()
         self.name = player.name
         self.is_ai = player.is_ai
-    
+
+class Heuristic(abc.ABC):
+    @abc.abstractmethod
+    def evaluate(self, board: chess.Board) -> float:
+        pass
+
+    def __call__(self, board: chess.Board) -> float:
+        return self.evaluate(board)
+
 class AI(Player, abc.ABC):
-    def __init__(self, player: InitPlayer) -> None:
+    def __init__(self, player: InitPlayer, heuristic: Heuristic | None = None) -> None:
         Player.__init__(self, player)
         abc.ABC.__init__(self)
+        self.heuristic = heuristic
     
     @abc.abstractmethod
     def makeMove(self, board: chess.Board) -> chess.Move:
         pass
-
