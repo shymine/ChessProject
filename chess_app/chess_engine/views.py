@@ -120,7 +120,7 @@ def _player(move: str | None, game: Game):
             if uci_move in game.legalMoves():
                 game.play(uci_move)
             else:
-                raise Exception("Illegal Move")
+                raise Exception("Illegal Move among {}".format([x.uci() for x in game.legalMoves()]))
         except Exception as err:
             error_message = err
             traceback.print_exc()

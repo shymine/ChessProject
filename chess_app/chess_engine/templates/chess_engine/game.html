@@ -9,7 +9,7 @@
 <body>
     <div class="container">
 
-        <nav class="navbar navbar navbar-expand-lg navbar-dark bg-dark mb-5">
+        <nav class="navbar navbar navbar-expand-lg navbar-dark bg-dark mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" onclick="location.href='{% url 'index' %}'">Introduction à l'IA via les
                     échecs</a>
@@ -20,7 +20,7 @@
                 {% autoescape off %}{{ image }}{% endautoescape %}
             </div>
             <div class="col-md-4"> <!--the history, players and the play buttons-->
-                <div class="row overflow-auto" style="height: 856px;"> <!--history-->
+                <div class="row overflow-auto" style="height: 756px;"> <!--history-->
                     <ul>
                         {% for move in history %}
                         <li class="row">

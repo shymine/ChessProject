@@ -33,3 +33,4 @@ go.work.sum
 
 db.sqlite3
 **/__pycache__
+**/tree_debug
