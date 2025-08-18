@@ -13,8 +13,8 @@ class PieceCountH(Heuristic):
 
     def evaluate(self, board: Board) -> float:
         current_color = board.turn
-        value_player = self.pieces_value(board, current_color)
-        value_other = self.pieces_value(board, not current_color)
+        value_player = self.pieces_value(board, not current_color)
+        value_other = self.pieces_value(board, current_color)
         return value_player - value_other
 
     def pieces_value(self, node: Board, color: chess.Color) -> float:

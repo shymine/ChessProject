@@ -40,7 +40,7 @@ class MinMax(AI):
     
     def minmax(self, node: Board, depth: int, player: bool, player_color: chess.Color) -> float:
         if depth == 0 :
-            v = self.heuristic(node, player, player_color)
+            v = self.heuristic(node)
             self.tree_log.append("-    "*(self.depth-depth)+node.peek().uci()+" ("+str(v)+")")
             return v
         if node.is_checkmate():
