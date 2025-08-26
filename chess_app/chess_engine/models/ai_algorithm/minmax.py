@@ -10,7 +10,8 @@ class MinMax(AI):
         self.depth = 2
         self.tree_log = []
         self.count = 0
-        super().__init__(player, heuristic)
+        self.heuristic = heuristic
+        super().__init__(player)
     
     def makeMove(self, board: Board) -> Move:
         start = time.time()

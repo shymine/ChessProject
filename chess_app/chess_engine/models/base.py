@@ -21,10 +21,9 @@ class Heuristic(abc.ABC):
         return self.evaluate(board)
 
 class AI(Player, abc.ABC):
-    def __init__(self, player: InitPlayer, heuristic: Heuristic | None = None) -> None:
+    def __init__(self, player: InitPlayer) -> None:
         Player.__init__(self, player)
         abc.ABC.__init__(self)
-        self.heuristic = heuristic
     
     @abc.abstractmethod
     def makeMove(self, board: chess.Board) -> chess.Move:
