@@ -4,10 +4,19 @@ import chess.svg
 from chess import Move
 from chess_engine.models.base import InitPlayer, Player
 from chess_engine.models.ai_list import AI_LIST
+from chess_engine.models.ai_algorithm.pieceCountH import PieceCountH
+
+AI_PARAMS = {
+    "minmax": {
+        "heuristic": PieceCountH()
+    },
+}
+
 
 class Game:
     def __init__(self, black: InitPlayer, white: InitPlayer) -> None:
-        create = lambda p : self._createPlayer(p) if not p.is_ai else self._createAI(p)
+        create = lambda p : self._createPlayer(p) if not p.is_ai else self._createAI(p, AI_PARAMS[p.name])
+
         self.players = {
             chess.BLACK: create(black),
             chess.WHITE: create(white)
@@ -18,8 +27,8 @@ class Game:
     def _createPlayer(self, player: InitPlayer) -> Player :
         return Player(player)
     
-    def _createAI(self, player: InitPlayer) -> Player:
-        ai = AI_LIST[player.name]
+    def _createAI(self, player: InitPlayer, params) -> Player:
+        ai = AI_LIST[player.name](player, **params)
         return ai
 
     def legalMoves(self) -> list[Move]:
