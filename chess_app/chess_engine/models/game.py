@@ -10,6 +10,9 @@ AI_PARAMS = {
     "minmax": {
         "heuristic": PieceCountH()
     },
+    "mcts": {
+        "iterations": 200
+    }
 }
 
 
