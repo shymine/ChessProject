@@ -6,8 +6,8 @@ import random
 import chess
 
 class MinMax(AI):
-    def __init__(self, player: InitPlayer, heuristic: Heuristic) -> None:
-        self.depth = 2
+    def __init__(self, player: InitPlayer, heuristic: Heuristic, depth: int) -> None:
+        self.depth = depth
         self.tree_log = []
         self.count = 0
         self.heuristic = heuristic

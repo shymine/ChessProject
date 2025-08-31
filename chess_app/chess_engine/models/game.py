@@ -8,7 +8,8 @@ from chess_engine.models.ai_algorithm.pieceCountH import PieceCountH
 
 AI_PARAMS = {
     "minmax": {
-        "heuristic": PieceCountH()
+        "heuristic": PieceCountH(),
+        "depth": 3
     },
     "mcts": {
         "iterations": 200
