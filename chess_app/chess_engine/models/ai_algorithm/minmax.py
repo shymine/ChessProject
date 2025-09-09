@@ -39,7 +39,7 @@ class MinMax(AI):
         r = random.randint(0, len(best_moves)-1)
         return best_moves[r]
     
-    def minmax(self, node: Board, depth: int, player: bool, player_color: chess.Color) -> float:
+    def minmax(self, node: Board, depth: int, player: bool, player_color: chess.Color, alpha: float, beta: float) -> float:
         if depth == 0 :
             v = self.heuristic(node)
             self.tree_log.append("-    "*(self.depth-depth)+node.peek().uci()+" ("+str(v)+")")
@@ -59,13 +59,21 @@ class MinMax(AI):
         if player:
             v = -math.inf     
             for child in children:
-                v = max(v, self.minmax(child, depth-1, not player, player_color))
+                v = max(v, self.minmax(child, depth-1, not player, player_color, alpha, beta))
+                if v >= beta:
+                    self.tree_log[curr_lvl] = self.tree_log[curr_lvl]+" ("+str(v)+") max"
+                    return v
+                alpha = max(v, alpha)
             self.tree_log[curr_lvl] = self.tree_log[curr_lvl]+" ("+str(v)+") max"
             return v
         else:
             v = math.inf
             for child in children:
-                v = min(v, self.minmax(child, depth-1, not player, player_color))
+                v = min(v, self.minmax(child, depth-1, not player, player_color, alpha, beta))
+                if v <= alpha:
+                    self.tree_log[curr_lvl] = self.tree_log[curr_lvl]+" ("+str(v)+") min"
+                    return v
+                beta = min(v, beta)
             self.tree_log[curr_lvl] = self.tree_log[curr_lvl]+" ("+str(v)+") min"
             return v
     
