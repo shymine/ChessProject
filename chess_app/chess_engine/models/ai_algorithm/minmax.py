@@ -24,7 +24,7 @@ class MinMax(AI):
 
         for move in board.legal_moves:
             child = self._create_child(board, move)
-            score = self.minmax(child, self.depth, False, board.turn, board_table)
+            score = self.minmax(child, self.depth, False, board.turn, board_table, -math.inf, math.inf)
             if score == best_score:
                 best_moves.append(move)
             if score > best_score:
@@ -41,7 +41,7 @@ class MinMax(AI):
         r = random.randint(0, len(best_moves)-1)
         return best_moves[r]
     
-    def minmax(self, node: Board, depth: int, player: bool, player_color: chess.Color, lookup_table: Dict[str, float]) -> float:
+    def minmax(self, node: Board, depth: int, player: bool, player_color: chess.Color, lookup_table: Dict[str, float], alpha, beta) -> float:
         if depth == 0 :
             v = self.heuristic(node, player_color)
             self.tree_log.append("-    "*(self.depth-depth)+node.peek().uci()+" ("+str(v)+")")
@@ -66,14 +66,20 @@ class MinMax(AI):
         if player:
             v = -math.inf     
             for child in children:
-                v = max(v, self.minmax(child, depth-1, not player, player_color, lookup_table))
+                v = max(v, self.minmax(child, depth-1, not player, player_color, lookup_table, alpha, beta))
+                if v > beta :
+                    return v
+                alpha = max(alpha, v)
             lookup_table[node_hash] = v
             self.tree_log[curr_lvl] = self.tree_log[curr_lvl]+" ("+str(v)+") max"
             return v
         else:
             v = math.inf
             for child in children:
-                v = min(v, self.minmax(child, depth-1, not player, player_color, lookup_table))
+                v = min(v, self.minmax(child, depth-1, not player, player_color, lookup_table, alpha, beta))
+                if v < alpha:
+                    return v
+                beta = min(beta, v)
             lookup_table[node_hash] = v
             self.tree_log[curr_lvl] = self.tree_log[curr_lvl]+" ("+str(v)+") min"
             return v
