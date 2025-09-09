@@ -14,11 +14,11 @@ class Player:
 
 class Heuristic(abc.ABC):
     @abc.abstractmethod
-    def evaluate(self, board: chess.Board) -> float:
+    def evaluate(self, board: chess.Board, player_color: chess.Color) -> float:
         pass
 
-    def __call__(self, board: chess.Board) -> float:
-        return self.evaluate(board)
+    def __call__(self, board: chess.Board, player_color: chess.Color) -> float:
+        return self.evaluate(board, player_color)
 
 class AI(Player, abc.ABC):
     def __init__(self, player: InitPlayer) -> None:

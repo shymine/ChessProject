@@ -1,3 +1,4 @@
+from typing import Dict
 from chess import Board, Move
 from chess_engine.models.base import InitPlayer, AI, Heuristic
 import math
@@ -19,10 +20,11 @@ class MinMax(AI):
 
         best_score = -math.inf
         best_moves = []
+        board_table = {}
 
         for move in board.legal_moves:
             child = self._create_child(board, move)
-            score = self.minmax(child, self.depth, False, child.turn)
+            score = self.minmax(child, self.depth, False, board.turn, board_table)
             if score == best_score:
                 best_moves.append(move)
             if score > best_score:
@@ -39,9 +41,9 @@ class MinMax(AI):
         r = random.randint(0, len(best_moves)-1)
         return best_moves[r]
     
-    def minmax(self, node: Board, depth: int, player: bool, player_color: chess.Color, alpha: float, beta: float) -> float:
+    def minmax(self, node: Board, depth: int, player: bool, player_color: chess.Color, lookup_table: Dict[str, float]) -> float:
         if depth == 0 :
-            v = self.heuristic(node)
+            v = self.heuristic(node, player_color)
             self.tree_log.append("-    "*(self.depth-depth)+node.peek().uci()+" ("+str(v)+")")
             return v
         if node.is_checkmate():
@@ -52,6 +54,11 @@ class MinMax(AI):
             self.tree_log.append("-    "*(self.depth-depth)+node.peek().uci()+" (draw)")
             return 0
         
+        node_hash = node.fen()
+
+        if node_hash in lookup_table:
+            return lookup_table[node_hash]
+        
         curr_lvl = len(self.tree_log)
         self.tree_log.append("-    "*(self.depth-depth)+node.peek().uci())
 
@@ -59,21 +66,15 @@ class MinMax(AI):
         if player:
             v = -math.inf     
             for child in children:
-                v = max(v, self.minmax(child, depth-1, not player, player_color, alpha, beta))
-                if v >= beta:
-                    self.tree_log[curr_lvl] = self.tree_log[curr_lvl]+" ("+str(v)+") max"
-                    return v
-                alpha = max(v, alpha)
+                v = max(v, self.minmax(child, depth-1, not player, player_color, lookup_table))
+            lookup_table[node_hash] = v
             self.tree_log[curr_lvl] = self.tree_log[curr_lvl]+" ("+str(v)+") max"
             return v
         else:
             v = math.inf
             for child in children:
-                v = min(v, self.minmax(child, depth-1, not player, player_color, alpha, beta))
-                if v <= alpha:
-                    self.tree_log[curr_lvl] = self.tree_log[curr_lvl]+" ("+str(v)+") min"
-                    return v
-                beta = min(v, beta)
+                v = min(v, self.minmax(child, depth-1, not player, player_color, lookup_table))
+            lookup_table[node_hash] = v
             self.tree_log[curr_lvl] = self.tree_log[curr_lvl]+" ("+str(v)+") min"
             return v
     
