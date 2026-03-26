@@ -11,6 +11,7 @@ AI_PARAMS = {
         "heuristic": PieceCountH(),
         "depth": 3
     },
+    "random": {},
 }
 
 
